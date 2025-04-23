@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سيمفونية مـيـنة الكونية 🌌</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Marhey:wght@400;700&family=El+Messiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Palette: Deeper Cosmic Tones */
+            --primary-color: #a21caf; /* مزيج فوشيا/أرجواني */
+            --secondary-color: #1e1b4b; /* أزرق ليلي عميق */
+            --accent-color-1: #fbcfe8; /* وردي باهت جداً (مثل نجم بعيد) */
+            --accent-color-2: #facc15; /* ذهبي أكثر إشراقاً */
+            --text-color: #d1d5db; /* رمادي فاتح */
+            --card-bg: rgba(29, 27, 75, 0.8); /* خلفية بطاقة داكنة شبه شفافة */
+            --card-text-color: #f3f4f6; /* نص فاتح جداً للبطاقة */
+            --glow-color-primary: rgba(162, 28, 175, 0.6);
+            --glow-color-accent: rgba(250, 204, 21, 0.5);
+            --border-color: rgba(251, 207, 232, 0.4);
+            --card-shine-color: rgba(255, 255, 255, 0.15);
+
+            /* Variables for JS Interaction */
+            --rotateX: 0deg;
+            --rotateY: 0deg;
+            --glowX: 50%;
+            --glowY: 50%;
+            --glowOpacity: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'El Messiri', sans-serif;
+            background-color: #0c0a18; /* لون أساسي داكن جداً */
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* --- Multi-Layered Animated Background --- */
+        .background-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .stars, .nebula {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: repeat;
+        }
+
+        .stars {
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill="%23fbcfe8" fill-opacity="0.3"><circle cx="50" cy="50" r=".8"/><circle cx="15" cy="20" r=".5"/><circle cx="80" cy="75" r=".6"/><circle cx="30" cy="85" r=".4"/><circle cx="65" cy="15" r=".4"/><circle cx="5" cy="5" r="0.7"/><circle cx="95" cy="95" r="0.7"/></g></svg>');
+            background-size: 250px 250px;
+            animation: starsMove 120s linear infinite;
+            opacity: 0.7;
+        }
+
+        .nebula {
+            background: radial-gradient(ellipse at 70% 30%, rgba(162, 28, 175, 0.2) 0%, transparent 60%),
+                        radial-gradient(ellipse at 30% 70%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+            mix-blend-mode: screen; /* لتداخل الألوان بشكل ناعم */
+            animation: nebulaShift 90s ease-in-out infinite alternate;
+        }
+
+        @keyframes starsMove {
+            from { background-position: 0 0; }
+            to { background-position: 500px 1000px; }
+        }
+
+        @keyframes nebulaShift {
+            from { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            to { transform: scale(1.3) rotate(20deg); opacity: 1; }
+        }
+
+        /* --- Intro: Cosmic Singularity --- */
+        .intro-singularity {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            background-color: #0c0a18;
+            animation: singularityFadeOut 1s 1.2s ease-in forwards; /* أسرع (1.2ث تأخير, 1ث تلاشي) */
+            pointer-events: none;
+        }
+
+        .singularity-core {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-color-1);
+            border-radius: 50%;
+            box-shadow: 0 0 20px 10px var(--accent-color-1),
+                        0 0 40px 20px var(--glow-color-primary),
+                        0 0 80px 40px rgba(162, 28, 175, 0.3);
+            animation: singularityExpandCollapse 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes singularityExpandCollapse {
+            0% { transform: scale(0.1); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes singularityFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* --- Card Container --- */
+        .card-container {
+            padding: 80px 15px;
+            perspective: 2000px; /* زيادة المنظور للتأثير ثلاثي الأبعاد */
+            opacity: 0;
+            animation: containerAppear 1s 2.0s ease-out forwards; /* تأخير بعد الانترو */
+        }
+         @keyframes containerAppear {
+            from { opacity: 0; }
+            to { opacity: 1; }
+         }
+
+
+        /* --- Interactive 3D Card --- */
+        .card {
+            max-width: 950px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px) saturate(120%); /* زيادة التشبع والتعتيم */
+            border-radius: 35px;
+            padding: 50px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
+                        inset 0 0 15px rgba(251, 207, 232, 0.1); /* ظل خارجي وداخلي خفيف */
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 50px;
+            color: var(--card-text-color);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d; /* أساسي للتأثير ثلاثي الأبعاد */
+            transform: rotateY(var(--rotateY)) rotateX(var(--rotateX)); /* يتم التحكم به عبر JS */
+            transition: transform 0.1s ease-out; /* انتقال سلس عند حركة الماوس */
+            will-change: transform, box-shadow; /* تحسين الأداء */
+        }
+
+        /* Dynamic Glow Effect (controlled by JS) */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 35px;
+            background: radial-gradient(circle at var(--glowX) var(--glowY),
+                                        rgba(251, 207, 232, 0.3), /* لون التوهج الأساسي */
+                                        transparent 40% /* حجم التوهج */
+                                      );
+            opacity: var(--glowOpacity);
+            transition: opacity 0.2s ease-out;
+            z-index: 0; /* خلف المحتوى ولكن فوق الخلفية */
+            pointer-events: none;
+        }
+
+        /* Card Shine (Subtler) */
+         .card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: -150%;
+             width: 80%;
+             height: 100%;
+             background: linear-gradient(to right, transparent 0%, var(--card-shine-color) 50%, transparent 100%);
+             transform: skewX(-25deg);
+             animation: cardShine 6s linear infinite 2.5s; /* أبطأ ويبدأ بعد ظهور البطاقة */
+             z-index: 1;
+             pointer-events: none;
+             opacity: 0.8;
+         }
+
+        @keyframes cardShine {
+            to { left: 150%; }
+        }
+
+
+        /* --- Profile Picture Area --- */
+        .profile-picture-area {
+            flex-shrink: 0;
+            text-align: center;
+            position: relative;
+            z-index: 3; /* فوق كل شيء آخر داخل البطاقة */
+            transform: translateZ(40px); /* إبراز الصورة للأمام قليلاً */
+        }
+
+        .profile-picture {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 7px solid transparent;
+            background: linear-gradient(var(--accent-color-1), var(--primary-color)) border-box;
+             -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+                     mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+             -webkit-mask-composite: destination-out;
+                     mask-composite: subtract;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px var(--glow-color-primary); /* ظل + توهج */
+            margin-bottom: 20px;
+            animation: profilePicAppear 1.2s 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       profileFloat 6s ease-in-out infinite 3.5s; /* إضافة حركة طفو */
+            opacity: 0;
+        }
+
+        @keyframes profilePicAppear {
+            from { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes profileFloat { /* حركة طفو بسيطة */
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+        }
+
+        .profile-name {
+            font-family: 'Marhey', cursive;
+            font-size: 2.2em;
+            color: var(--accent-color-1); /* تغيير لون الاسم */
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent-color-1), 0 0 20px var(--glow-color-primary); /* تأثير توهج */
+            opacity: 0;
+            animation: fadeInElement 1s 2.8s ease-out forwards;
+        }
+
+        /* --- Info Area --- */
+        .info-area {
+            flex-grow: 1;
+            z-index: 2;
+            transform: translateZ(20px); /* إبراز النص قليلاً */
+        }
+
+        h2 {
+            font-family: 'Marhey', cursive;
+            font-size: 2.2em;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            display: inline-block;
+            position: relative;
+            opacity: 0;
+            transform: translateX(40px);
+            animation: headingSlideIn 1s ease-out forwards;
+            background: linear-gradient(60deg, var(--accent-color-1), var(--accent-color-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 5px var(--glow-color-accent));
+        }
+
+        /* Animated underline */
+        h2::after {
+           content: '';
+           position: absolute;
+           bottom: -4px;
+           right: 0;
+           width: 0;
+           height: 4px;
+           background: linear-gradient(to left, var(--accent-color-2), var(--primary-color));
+           border-radius: 2px;
+           box-shadow: 0 0 8px var(--glow-color-accent);
+           animation: underlineExpand 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+         /* !!== تم تعديل تأخيرات الحركة لجميع العناوين والفقرات التالية بعد إضافة قسم الصوت والنموذج ==!! */
+         /* Heading appearance timings (Adjusted Delays) */
+         .info-area h2:nth-of-type(1) { animation-delay: 3.0s; } /* Info */
+         .info-area h2:nth-of-type(1)::after { animation-delay: 3.3s; }
+         .info-area h2:nth-of-type(2) { animation-delay: 4.5s; } /* Voice Message */
+         .info-area h2:nth-of-type(2)::after { animation-delay: 4.8s; }
+         .info-area h2:nth-of-type(3) { animation-delay: 5.5s; } /* Mood */
+         .info-area h2:nth-of-type(3)::after { animation-delay: 5.8s; }
+         .info-area h2:nth-of-type(4) { animation-delay: 6.3s; } /* Aura */
+         .info-area h2:nth-of-type(4)::after { animation-delay: 6.6s; }
+         .info-area h2:nth-of-type(5) { animation-delay: 7.3s; } /* Interests */
+         .info-area h2:nth-of-type(5)::after { animation-delay: 7.6s; }
+         .info-area h2:nth-of-type(6) { animation-delay: 8.8s; } /* Skills */
+         .info-area h2:nth-of-type(6)::after { animation-delay: 9.1s; }
+         .info-area h2:nth-of-type(7) { animation-delay: 10.5s; } /* Personality */
+         .info-area h2:nth-of-type(7)::after { animation-delay: 10.8s; }
+         .info-area h2:nth-of-type(8) { animation-delay: 11.5s; } /* Motto */
+         .info-area h2:nth-of-type(8)::after { animation-delay: 11.8s; }
+         .info-area h2:nth-of-type(9) { animation-delay: 12.5s; } /* Contact */
+         .info-area h2:nth-of-type(9)::after { animation-delay: 12.8s; }
+         .info-area h2:nth-of-type(10) { animation-delay: 14.5s; } /* Suggestion Form (NEW) */
+         .info-area h2:nth-of-type(10)::after { animation-delay: 14.8s; }
+
+
+        @keyframes headingSlideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); }}
+        @keyframes underlineExpand { from { width: 0; } to { width: 85%; }}
+
+        .info-segment {
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+            font-size: 1.2em;
+            opacity: 0;
+            transform: scale(0.95) translateX(35px);
+            animation: segmentFadeSlide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .info-segment i {
+            font-size: 1.5em;
+            margin-left: 20px; /* Adjusted for RTL */
+            width: 32px;
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease; /* Smooth bounce effect */
+            background: linear-gradient(145deg, var(--accent-color-1), var(--accent-color-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 5px var(--glow-color-accent));
+        }
+         .info-segment:hover i {
+            transform: scale(1.3) rotate(-10deg);
+            filter: drop-shadow(0 0 10px var(--glow-color-accent)) brightness(1.2);
+         }
+
+        .info-segment p { margin: 0; flex-grow: 1; }
+        .info-segment strong { color: var(--accent-color-1); font-weight: 700; text-shadow: 0 0 3px var(--glow-color-primary); }
+
+        @keyframes fadeInElement { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); }}
+        @keyframes segmentFadeSlide { from { opacity: 0; transform: scale(0.95) translateX(35px); } to { opacity: 1; transform: scale(1) translateX(0); }}
+
+        /* !!== تم تعديل تأخيرات الحركة للفقرات التالية بعد إضافة قسم الصوت والنموذج ==!! */
+        /* Info segment appearance timings (Adjusted Delays) */
+        /* Info */
+        .info-area .info-segment:nth-of-type(1) { animation-delay: 3.5s; }
+        .info-area .info-segment:nth-of-type(2) { animation-delay: 3.6s; }
+        .info-area .info-segment:nth-of-type(3) { animation-delay: 3.7s; }
+        .info-area .info-segment:nth-of-type(4) { animation-delay: 3.8s; }
+        .info-area .info-segment:nth-of-type(5) { animation-delay: 3.9s; }
+        .info-area .info-segment:nth-of-type(6) { animation-delay: 4.0s; }
+        /* Voice Message (NEW - Style applied directly below) */
+        /* Mood */
+        .info-area .info-segment:nth-of-type(7) { animation-delay: 6.0s; }
+        /* Aura */
+        .info-area .info-segment:nth-of-type(8) { animation-delay: 6.8s; }
+        .info-area .info-segment:nth-of-type(9) { animation-delay: 7.0s; }
+        /* Interests */
+        .info-area .info-segment:nth-of-type(10) { animation-delay: 7.8s; }
+        .info-area .info-segment:nth-of-type(11) { animation-delay: 8.0s; }
+        .info-area .info-segment:nth-of-type(12) { animation-delay: 8.2s; }
+        /* Skills - handled separately below */
+        /* Personality */
+        .info-area .info-segment:nth-of-type(13) { animation-delay: 11.0s; }
+        .info-area .info-segment:nth-of-type(14) { animation-delay: 11.2s; }
+        /* Motto */
+        .info-area .info-segment:nth-of-type(15) { animation-delay: 12.0s; }
+        /* Contact */
+        .info-area .info-segment:nth-of-type(16) { animation-delay: 13.0s; }
+        .info-area .info-segment:nth-of-type(17) { animation-delay: 13.2s; }
+        .info-area .info-segment:nth-of-type(18) { animation-delay: 13.4s; }
+        .info-area .info-segment:nth-of-type(19) { animation-delay: 13.6s; }
+        .info-area .info-segment:nth-of-type(20) { animation-delay: 13.8s; }
+        .info-area .info-segment:nth-of-type(21) { animation-delay: 14.0s; }
+        .info-area .info-segment:nth-of-type(22) { animation-delay: 14.2s; }
+        /* Suggestion Form - handled separately below */
+
+
+        /* --- NEW: Voice Message Audio Player Styles --- */
+        .voice-message-segment {
+             /* Inherits .info-segment styles */
+             align-items: center; /* Ensure icon and player align vertically */
+        }
+        .voice-message-segment audio {
+            width: 100%;
+            max-width: 350px; /* Adjust max width as needed */
+            filter: contrast(0.9) brightness(1.1); /* Subtle filter */
+            border-radius: 5px;
+            margin-right: 10px; /* Space from icon */
+            opacity: 0;
+            transform: scale(0.95) translateX(35px);
+            animation: segmentFadeSlide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 5.0s; /* Appears after its H2 */
+        }
+
+        /* --- Skills Constellation --- */
+        .skills-constellation {
+            margin-top: -10px; /* Pull up slightly */
+            margin-bottom: 30px;
+            position: relative;
+            min-height: 100px; /* Ensure space */
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(0,0,0, 0.1);
+            opacity: 0;
+            animation: fadeInElement 1s ease-out forwards;
+            animation-delay: 9.3s; /* Adjusted delay - After Skills H2 */
+        }
+
+        .skill-star {
+            position: absolute;
+            display: inline-flex; /* Use flex for alignment */
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(251, 207, 232, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9em;
+            cursor: default;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: skillAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            will-change: transform, box-shadow;
+        }
+        .skill-star::before { /* The glowing star part */
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-color-2);
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px var(--glow-color-accent);
+            animation: starTwinkle 2s ease-in-out infinite alternate;
+        }
+        .skill-star:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--glow-color-primary);
+        }
+
+        /* Positioning and delay for each skill (Adjusted delays) */
+        .skill-star:nth-child(1) { top: 10%; right: 15%; animation-delay: 9.6s; }
+        .skill-star:nth-child(2) { top: 30%; right: 55%; animation-delay: 9.8s; }
+        .skill-star:nth-child(3) { top: 60%; right: 25%; animation-delay: 10.0s; }
+        .skill-star:nth-child(4) { top: 75%; right: 65%; animation-delay: 10.2s; }
+        /* Add more skills and adjust positions (top/right/left/bottom) */
+
+        @keyframes skillAppear {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes starTwinkle {
+            from { opacity: 0.7; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+
+
+        /* Links */
+        .info-segment a {
+            background: linear-gradient(to right, var(--accent-color-2), #fef08a);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-decoration: none; font-weight: 700; position: relative;
+            transition: filter 0.3s ease, text-shadow 0.3s ease; filter: brightness(1.1);
+        }
+        .info-segment a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; right: 0;
+            background: linear-gradient(to left, var(--accent-color-2), var(--accent-color-1));
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); border-radius: 1px;
+        }
+        .info-segment a:hover { filter: brightness(1.4); text-shadow: 0 0 8px var(--glow-color-accent); }
+        .info-segment a:hover::after { width: 100%; left: 0; right: auto; }
+
+
+        /* --- Suggestion Form Styles --- */
+        .idea-form {
+            margin-top: 20px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            animation: fadeInElement 1s ease-out forwards;
+            animation-delay: 15.0s; /* Adjusted Delay - After Form H2 */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .idea-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent-color-1);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .idea-form input[type="text"],
+        .idea-form input[type="email"],
+        .idea-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: rgba(29, 27, 75, 0.7); /* Dark input background */
+            color: var(--card-text-color);
+            font-family: 'Cairo', sans-serif; /* Use a readable font */
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .idea-form input[type="text"]:focus,
+        .idea-form input[type="email"]:focus,
+        .idea-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-color-2);
+            box-shadow: 0 0 10px var(--glow-color-accent);
+        }
+
+        .idea-form textarea {
+            resize: vertical; /* Allow vertical resize only */
+            min-height: 100px;
+        }
+
+        .submit-button {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color-2));
+            color: #fff;
+            font-family: 'Marhey', cursive;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--glow-color-primary);
+            filter: brightness(1.1);
+        }
+
+         .submit-button i {
+             margin-right: 8px; /* Adjusted for RTL - icon on the left */
+         }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .card { flex-direction: column; padding: 40px; gap: 35px; max-width: 700px; }
+            .profile-picture-area { transform: translateZ(0); } /* Remove 3D offset */
+            .info-area { transform: translateZ(0); width: 100%; }
+            h2 { font-size: 2em; text-align: center; width: 100%; display: block; }
+             h2::after { right: 50%; transform: translateX(50%); animation: underlineExpandMobile 1s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+             @keyframes underlineExpandMobile { from{width:0;} to{width: 60%;} }
+            .skills-constellation { min-height: 150px; }
+            .voice-message-segment audio { max-width: 90%; }
+             .idea-form { padding: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 1rem; line-height: 1.7; }
+            .card { padding: 30px; border-radius: 25px; max-width: calc(100% - 40px); }
+            .profile-picture { width: 150px; height: 150px; border-width: 5px; }
+            .profile-name { font-size: 1.8em; }
+            h2 { font-size: 1.8em; }
+            .info-segment { font-size: 1.05em; margin-bottom: 18px; }
+            .info-segment i { font-size: 1.3em; margin-left: 15px; }
+            .skills-constellation { padding: 10px; }
+            .skill-star { font-size: 0.85em; padding: 4px 8px; gap: 5px; }
+            .skill-star::before { width: 6px; height: 6px; }
+            .voice-message-segment audio { max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 20px; border-radius: 20px; max-width: calc(100% - 30px); }
+            .profile-picture { width: 120px; height: 120px; }
+            .profile-name { font-size: 1.6em; }
+            h2 { font-size: 1.6em; }
+            .info-segment { font-size: 1em; }
+             .skill-star { position: relative !important; /* Stack skills on mobile */ top: auto !important; right: auto !important; display: flex; margin-bottom: 8px; width: fit-content; }
+             .skills-constellation { min-height: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;}
+             .voice-message-segment { flex-direction: column; align-items: center; gap: 10px; } /* Stack icon and player */
+             .voice-message-segment audio { margin-right: 0; }
+             .idea-form { padding: 15px; }
+             .idea-form input[type="text"], .idea-form input[type="email"], .idea-form textarea { padding: 10px; }
+             .submit-button { padding: 10px 20px; font-size: 1em; }
+        }
+
+         /* Accessibility: Reduce motion */
+         @media (prefers-reduced-motion: reduce) {
+            body::before, .nebula, .stars, .card::before, .profile-picture, .skill-star::before, h2::after, .card, .voice-message-segment audio, .idea-form, .skills-constellation, .skill-star {
+                animation: none !important;
+                transition: none !important;
+            }
+             .card { transform: none !important; } /* Disable JS tilt */
+            .info-segment i { transition: none !important; }
+             /* Keep simple fade-ins if desired, remove complex movements */
+            .profile-picture { animation: profilePicAppear 1.2s 2.2s ease forwards; /* Keep fade in */}
+            .profile-name, h2, .info-segment, .skills-constellation, .skill-star, .voice-message-segment audio, .idea-form { opacity: 1; transform: none; animation: none !important; } /* Appear immediately */
+         }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Layers -->
+    <div class="background-layers">
+        <div class="stars"></div>
+        <div class="nebula"></div>
+    </div>
+
+    <!-- Intro -->
+    <div class="intro-singularity">
+        <div class="singularity-core"></div>
+    </div>
+
+    <!-- Card Container -->
+    <div class="card-container">
+        <div class="card" id="interactive-card">
+
+            <!-- Profile Area -->
+            <div class="profile-picture-area" id="profile-area">
+                <!-- == استبدل 'placeholder.jpg' بمسار صورتك الشخصية == -->
+                <img src="placeholder.jpg" alt="صورة مينة الرمزية" class="profile-picture">
+                <div class="profile-name">مـيـنـة</div>
+            </div>
+
+            <!-- Info Area -->
+            <div class="info-area">
+
+                <h2><i class="fas fa-user-astronaut"></i> معلوماتي الشخصية:</h2>
+                <div class="info-segment"><i class="fas fa-signature"></i><p><strong>الاسم:</strong> مـيـنـة</p></div>
+                <div class="info-segment"><i class="fas fa-gem"></i><p><strong>تاريخ الميلاد:</strong> 1 جوان 2000 🎂</p></div>
+                <div class="info-segment"><i class="fas fa-map-pin"></i><p><strong>المكان:</strong> ڨديل - وهران، الجزائر 🇩🇿</p></div>
+                <div class="info-segment"><i class="fas fa-venus"></i><p><strong>الجنس:</strong> أنثى ♀️</p></div>
+                <div class="info-segment"><i class="fas fa-heart-pulse"></i><p><strong>الحالة الاجتماعية:</strong> عزباء 💁‍♀️</p></div>
+                <div class="info-segment"><i class="fas fa-rocket"></i><p><strong>المهنة:</strong> في رحلة استكشاف الفرص</p></div>
+
+                <!-- NEW: Voice Message Section -->
+                <h2><i class="fas fa-microphone-alt"></i> رسالة صوتية مني:</h2>
+                <div class="info-segment voice-message-segment">
+                    <i class="fas fa-play-circle"></i>
+                    <audio controls>
+                        <!-- == استبدل 'audio/placeholder_voice.mp3' بمسار ملفك الصوتي == -->
+                        <source src="audio/placeholder_voice.mp3" type="audio/mpeg">
+                        متصفحك لا يدعم تشغيل الصوت.
+                    </audio>
+                </div>
+
+                <h2><i class="fas fa-cloud-moon"></i> مزاجي الكوني الحالي:</h2>
+                <div class="info-segment"><i class="fas fa-meteor"></i><p>متألقة ومستعدة للإلهام ✨</p></div>
+
+                <h2><i class="fas fa-wand-sparkles"></i> هالتي الشخصية:</h2>
+                <div class="info-segment"><i class="fas fa-fire"></i><p>طاقة <strong>عنيدة</strong> وشغف متقد ❤️‍🔥</p></div>
+                <div class="info-segment"><i class="fas fa-hands-holding-heart"></i><p>لمسة <strong>حنية</strong> ودفء في التعامل 💖</p></div>
+
+                <h2><i class="fas fa-comet"></i> اهتماماتي الكونية:</h2>
+                <div class="info-segment"><i class="fas fa-pizza-slice"></i><p>استكشاف مجرات النكهات 🍕</p></div>
+                <div class="info-segment"><i class="fas fa-wifi"></i><p>التجول في الفضاء الرقمي 🌐</p></div>
+                <div class="info-segment"><i class="fas fa-palette"></i><p>إبداع فني في الطهي وكل أصبع بصنعة مجرّية 💅</p></div>
+
+                 <h2><i class="fas fa-star-of-david"></i> كوكبة مهاراتي:</h2>
+                 <div class="skills-constellation">
+                    <span class="skill-star">الطبخ الماهر</span>
+                    <span class="skill-star">إدارة الوقت</span>
+                    <span class="skill-star">التواصل الجيد</span>
+                    <span class="skill-star">الصبر</span>
+                    <!-- يمكنك إضافة المزيد من المهارات كنقاط نجوم -->
+                 </div>
+
+                <h2><i class="fas fa-user-shield"></i> درعي وشخصيتي:</h2>
+                <div class="info-segment"><i class="fas fa-atom"></i><p>مزيج فريد من التناقضات المتناغمة</p></div>
+                <div class="info-segment"><i class="fas fa-star"></i><p><strong>البساطة</strong> هي نجمي المرشد</p></div>
+
+                <h2><i class="fas fa-book-journal-whills"></i> دستوري في الحياة:</h2>
+                <div class="info-segment"><i class="fas fa-praying-hands"></i><p>أسلم أمري لرب الكون 🧿</p></div>
+
+                <h2><i class="fas fa-satellite-dish"></i> إشاراتي عبر المجرات:</h2>
+                <div class="info-segment"><i class="fas fa-phone-slash"></i><p><strong>رقم الهاتف:</strong> إشارة خاصة جداً</p></div>
+                <div class="info-segment"><i class="fab fa-facebook"></i><p><strong>فيسبوك:</strong> <a href="https://www.facebook.com/mi.na.944260" target="_blank" rel="noopener noreferrer">بوابتي الزرقاء</a></p></div>
+                <div class="info-segment"><i class="fab fa-instagram"></i><p><strong>إنستغرام:</strong> مرصدي البصري (قيد الإنشاء)</p></div>
+                <div class="info-segment"><i class="fab fa-twitter"></i><p><strong>تويتر:</strong> تغريدات نجمية (قيد الإنشاء)</p></div>
+                <div class="info-segment"><i class="fab fa-linkedin"></i><p><strong>لينكدإن:</strong> مداري المهني (قيد الإنشاء)</p></div>
+                <div class="info-segment"><i class="fab fa-tiktok"></i><p><strong>تيك توك:</strong> ومضات كونية (قيد الإنشاء)</p></div>
+                <div class="info-segment"><i class="fab fa-snapchat"></i><p><strong>سناب شات:</strong> أطياف سريعة (قيد الإنشاء)</p></div>
+
+                <!-- **************************************** -->
+                <!-- ***** Suggestion Form - FORMSUBMIT ***** -->
+                <!-- **************************************** -->
+                <h2><i class="fas fa-lightbulb"></i> اقترح فكرة / اترك رسالة:</h2>
+                <form id="suggestion-form" action="https://formsubmit.co/Zitzita99@gmail.com" method="POST" class="idea-form">
+                    <!-- == !! هذا النموذج يرسل الاقتراحات باستخدام FormSubmit إلى Zitzita99@gmail.com !! == -->
+                    <!-- == !! تذكر: يجب عليك تأكيد الإيميل بعد أول إرسال بالضغط على الرابط الذي يصلك من FormSubmit !! == -->
+
+                    <div class="form-group">
+                        <label for="suggestion">فكرتك أو رسالتك:</label>
+                        <textarea id="suggestion" name="suggestion" rows="5" required placeholder="اكتب اقتراحك أو رسالتك هنا..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender_name">اسمك (اختياري):</label>
+                        <input type="text" id="sender_name" name="name" placeholder="اسمك الكريم">
+                    </div>
+
+                    <!-- حقل إيميل اختياري للرد (مستحسن مع FormSubmit لـ Reply-To) -->
+                    <div class="form-group">
+                        <label for="sender_email">إيميلك (اختياري - للرد عليك):</label>
+                        <input type="email" id="sender_email" name="email" placeholder="بريدك الإلكتروني إن أردت رداً">
+                    </div>
+
+                    <!-- إعدادات FormSubmit -->
+                    <input type="hidden" name="_subject" value="💡 رسالة جديدة من موقع سيمفونية مينة الكونية!">
+                    <!-- !! مسار صفحة الشكر التي سيتم إنشاؤها في الملف الثاني -->
+                    <input type="hidden" name="_next" value="thankyou.html">
+                    <input type="hidden" name="_captcha" value="false"> <!-- غيّرها إلى "true" إذا واجهت رسائل سبام كثيرة -->
+                    <input type="hidden" name="_template" value="box"> <!-- شكل بسيط للإيميل المستلم -->
+
+                    <button type="submit" class="submit-button">
+                       <i class="fas fa-paper-plane"></i> إرسال الرسالة
+                    </button>
+                </form>
+                 <!-- **************************************** -->
+                 <!-- ***** End Suggestion Form Section ****** -->
+                 <!-- **************************************** -->
+
+            </div> <!-- End Info Area -->
+        </div> <!-- End Card -->
+    </div> <!-- End Card Container -->
+
+    <script>
+        // --- JavaScript for Interactive Effects ---
+        // (No changes needed in JS)
+
+        const card = document.getElementById('interactive-card');
+        const cardContainer = document.querySelector('.card-container');
+
+        if (card && cardContainer) {
+            const MAX_ROTATION = 12;
+            const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            let enableMotion = !motionQuery.matches;
+
+            const handleMouseMove = (e) => {
+                if (!enableMotion) return;
+
+                const rect = cardContainer.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((mouseY - centerY) / centerY) * -MAX_ROTATION;
+                const rotateY = ((mouseX - centerX) / centerX) * MAX_ROTATION;
+                const glowX = (mouseX / rect.width) * 100;
+                const glowY = (mouseY / rect.height) * 100;
+
+                card.style.setProperty('--rotateX', `${rotateX}deg`);
+                card.style.setProperty('--rotateY', `${rotateY}deg`);
+                card.style.setProperty('--glowX', `${glowX}%`);
+                card.style.setProperty('--glowY', `${glowY}%`);
+                card.style.setProperty('--glowOpacity', '1');
+            };
+
+            const handleMouseLeave = () => {
+                 if (!enableMotion) return;
+                card.style.setProperty('--rotateX', '0deg');
+                card.style.setProperty('--rotateY', '0deg');
+                card.style.setProperty('--glowOpacity', '0');
+            };
+
+            const resetMotion = () => {
+                handleMouseLeave(); // Reset visual state
+                card.style.transition = 'none'; // Disable transition temporarily
+                card.style.transform = 'none';
+                void card.offsetWidth; // Trigger reflow
+                card.style.transition = ''; // Re-enable default transition (or remove if no default needed)
+                card.style.removeProperty('--rotateX');
+                card.style.removeProperty('--rotateY');
+                card.style.removeProperty('--glowX');
+                card.style.removeProperty('--glowY');
+                card.style.removeProperty('--glowOpacity');
+            }
+
+            cardContainer.addEventListener('mousemove', handleMouseMove);
+            cardContainer.addEventListener('mouseleave', handleMouseLeave);
+
+            motionQuery.addEventListener('change', () => {
+                enableMotion = !motionQuery.matches;
+                if (!enableMotion) {
+                   resetMotion();
+                }
+            });
+
+            // Initial check in case reduced motion is already enabled on load
+            if (!enableMotion) {
+                 card.style.setProperty('--glowOpacity', '0');
+            }
+        }
+
+    </script>
+
+</body>
+</html>
